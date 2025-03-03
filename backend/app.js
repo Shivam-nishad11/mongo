@@ -58,47 +58,47 @@ app.get("/get-data", async (req, res) => {
         phone,
       })),
     });
-  } catch (error) {const express = require("express");
+  } catch (error) {
+    const express = require("express");
     const mongoose = require("mongoose");
     const cors = require("cors");
     const bodyParser = require("body-parser");
     require("dotenv").config();
-    
+
     const app = express();
-    
+
     app.use(cors());
     app.use(bodyParser.json());
-    
-    // Connect to MongoDB
+
     mongoose
       .connect("mongodb://localhost:27017/myDatabase", { useNewUrlParser: true, useUnifiedTopology: true })
       .then(() => console.log("MongoDB connected"))
       .catch((err) => console.log("MongoDB connection error:", err));
-    
-    // Root Route
+
+
     app.get("/", (req, res) => {
       res.send("Welcome to the backend API!");
     });
-    
-    // Schema and Model
+
+
     const FormDataSchema = new mongoose.Schema({
       name: String,
       age: Number,
       phone: Number,
     });
-    
+
     const FormData = mongoose.model("FormData", FormDataSchema);
-    
-    // POST: Save Data
+
+
     app.post("/submit-form", async (req, res) => {
       const { name, age, phone } = req.body;
-    
+
       if (!name || !age || !phone) {
         return res.status(400).json({ error: "All fields are required" });
       }
-    
+
       const newFormData = new FormData({ name, age, phone });
-    
+
       try {
         await newFormData.save();
         res.status(201).json({ message: "Data saved successfully", data: newFormData });
@@ -106,8 +106,8 @@ app.get("/get-data", async (req, res) => {
         res.status(500).json({ error: "Error saving data", details: error.message });
       }
     });
-    
-    // GET: Fetch Data
+
+
     app.get("/get-data", async (req, res) => {
       try {
         const data = await FormData.find();
@@ -127,12 +127,12 @@ app.get("/get-data", async (req, res) => {
         res.status(500).json({ error: "Error fetching data", details: error.message });
       }
     });
-    
+
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
-    
+
     res.status(500).json({ error: "Error fetching data", details: error.message });
   }
 });
